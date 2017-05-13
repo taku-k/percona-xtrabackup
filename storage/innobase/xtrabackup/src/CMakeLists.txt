@@ -112,6 +112,40 @@ MYSQL_ADD_EXECUTABLE(xtrabackup
   ../../../../sql/des_key_file.cc
   )
 
+ADD_LIBRARY(xtrabackup_static STATIC
+  xtrabackup.cc
+  innobackupex.cc
+  changed_page_bitmap.cc
+  compact.cc
+  datasink.c
+  ds_archive.c
+  ds_buffer.c
+  ds_compress.c
+  ds_encrypt.c
+  ds_decrypt.c
+  ds_local.c
+  ds_stdout.c
+  ds_tmpfile.c
+  ds_xbstream.c
+  fil_cur.cc
+  quicklz/quicklz.c
+  read_filt.cc
+  write_filt.cc
+  wsrep.cc
+  xbcrypt_common.c
+  xbcrypt_write.c
+  xbstream_write.c
+  backup_mysql.cc
+  backup_copy.cc
+  keyring.cc
+  ../../../../plugin/keyring/keyring_impl.cc
+  ../../../../plugin/keyring/keyring_key.cc
+  ../../../../plugin/keyring/buffered_file_io.cc
+  ../../../../plugin/keyring/keys_container.cc
+  ../../../../sql-common/client_authentication.cc
+  ../../../../sql/des_key_file.cc
+  )
+
 SET_TARGET_PROPERTIES(xtrabackup PROPERTIES ENABLE_EXPORTS TRUE)
 
 TARGET_LINK_LIBRARIES(xtrabackup 
@@ -121,7 +155,18 @@ TARGET_LINK_LIBRARIES(xtrabackup
   crc
   )
 
+TARGET_LINK_LIBRARIES(xtrabackup_static
+  -Wl,--whole-archive
+  mysqlserver 
+  ${GCRYPT_LIBS} 
+  archive_static
+  crc
+  -Wl,--no-whole-archive
+  )
+
+
 ADD_DEPENDENCIES(xtrabackup GenVersionCheck)
+ADD_DEPENDENCIES(xtrabackup_static GenVersionCheck)
 
 ########################################################################
 # innobackupex symlink

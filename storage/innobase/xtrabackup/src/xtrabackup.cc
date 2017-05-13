@@ -8081,8 +8081,10 @@ handle_options(int argc, char **argv, char ***argv_client, char ***argv_server)
 }
 
 /* ================= main =================== */
-
-int main(int argc, char **argv)
+#ifdef __cplusplus
+extern "C" {
+#endif
+int xtrabackup_main(int argc, char **argv)
 {
 	char **client_defaults, **server_defaults;
 	char cwd[FN_REFLEN];
@@ -8360,3 +8362,6 @@ int main(int argc, char **argv)
 
 	exit(EXIT_SUCCESS);
 }
+#ifdef __cplusplus
+}
+#endif
